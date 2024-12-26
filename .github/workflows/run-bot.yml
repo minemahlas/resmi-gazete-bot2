@@ -1,0 +1,33 @@
+name: Resmi Gazete Bot
+
+on:
+  workflow_dispatch:  # Manuel tetikleme etkin
+    inputs:
+      keyword:
+        description: 'Anahtar kelimeleri manuel olarak belirleyin (isteğe bağlı).'
+        required: false
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Depoyu klonla
+      uses: actions/checkout@v3
+
+    - name: Python'u kur
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Gereksinimleri yükle
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Botu çalıştır
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        CHAT_ID: ${{ secrets.CHAT_ID }}
+      run: |
+        python main.py
